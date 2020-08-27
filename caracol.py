@@ -12,7 +12,7 @@ info = pygame.display.Info()
 weightWin = info.current_w
 hightWin = info.current_h - 20
 text = ''
-win = pygame.display.set_mode((weightWin, hightWin), RESIZABLE)   # center: 625, 417
+win = pygame.display.set_mode((weightWin, hightWin), RESIZABLE)  # center: 625, 417
 pygame.display.set_caption("casiCaracol")
 icon = pygame.image.load('images/beer.png')
 pygame.display.set_icon(icon)
@@ -53,7 +53,6 @@ exName = pygame.transform.scale(exName, (25, 25))
 nextButton = pygame.image.load('images/next-button.png')
 nextButton = pygame.transform.scale(nextButton, (115, 115))
 
-
 # Game Logic
 #               1. Se ponen todas las cartas boca abajo sobre la mesa formando un espiral
 #               2. Se comienza dando vuelta la primera carta (la mas lejana al centro)
@@ -61,18 +60,16 @@ nextButton = pygame.transform.scale(nextButton, (115, 115))
 #               mayor, menor, negro, rojo
 #               4. En caso de seleccionar un
 
-
-
 # Variables
-listCards = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12',  'c13',
-             'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'd12',  'd13',
-             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12',  'h13',
-             's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11', 's12',  's13',
+listCards = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13',
+             'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'd12', 'd13',
+             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12', 'h13',
+             's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11', 's12', 's13',
 
-             'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12',  'c13',
-             'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'd12',  'd13',
-             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12',  'h13',
-             's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11', 's12',  's13']
+             'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13',
+             'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'd12', 'd13',
+             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12', 'h13',
+             's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11', 's12', 's13']
 copyListCards = listCards.copy()
 random.shuffle(listCards)
 numCards = len(listCards)
@@ -86,14 +83,16 @@ drinks = 0
 currentDrinks = 0
 numPlayer = 0
 
+
 class Card(object):
     def __init__(self, suit, rank, x, y):
         self.suit = suit
         self.rank = rank
         self.x = x
         self.y = y
-        self.image = pygame.image.load('images/cards/'+str(self.suit)+str(self.rank)+'.png')
+        self.image = pygame.image.load('images/cards/' + str(self.suit) + str(self.rank) + '.png')
         self.rotate_image = pygame.transform.rotate(self.image, 90)
+
 
 class Player(object):
     def __init__(self, name, score, y):
@@ -103,43 +102,47 @@ class Player(object):
         self.y = y
         self.currentDrinks = 0
 
+
 # Mov Cards
-xCard = int(weightWin/6)
-yCard = int(hightWin/5)
+xCard = int(weightWin / 6)
+yCard = int(hightWin / 5)
 wrongCard = False
 colorOption = False
 
+
+# noinspection PyPep8Naming,PyShadowingNames
 def chooseCard():
     global wrongCard, colorOption, xCard, yCard, suitCard, rankCard, nC, numCards
 
     suitCard = listCards[nC][0]
     rankCard = listCards[nC][1:]
 
-    if (xCard + withCard/2) >= (5*weightWin/6):
-        xCard = int(weightWin/6)
+    if (xCard + withCard / 2) >= (5 * weightWin / 6):
+        xCard = int(weightWin / 6)
         yCard += int(hightCard + 10)
     else:
-        xCard += int(withCard/2)
+        xCard += int(withCard / 2)
 
-    if colorOption == True:
+    if colorOption:
         chosenCard = Card(suitCard, rankCard, xCard, yCard + 16)
         win.blit(chosenCard.rotate_image, (chosenCard.x, chosenCard.y))
     else:
         chosenCard = Card(suitCard, rankCard, xCard, yCard)
-        win.blit (chosenCard.image, (chosenCard.x,chosenCard.y))
+        win.blit(chosenCard.image, (chosenCard.x, chosenCard.y))
 
     pygame.display.update()
-    if wrongCard == True:
+    if wrongCard:
         backCard()
 
     nC += 1
     numCards -= 1
 
+
 def backCard():
     global colorOption, xCard, yCard, wrongCard
 
     pygame.time.delay(750)
-    if colorOption == True:
+    if colorOption:
         win.blit(rotate_back, (xCard, yCard + 16))
         xCard += 16
         colorOption = False
@@ -147,12 +150,14 @@ def backCard():
         win.blit(back, (xCard, yCard))
     wrongCard = False
 
+
+# noinspection PyPep8Naming,PyShadowingNames
 def choosOption():
-    global suitCard, rankCard, lastSuit, lastRank, wrongCard, nC, listCards, colorOption, numPlayer, text, drinks
+    global suitCard, rankCard, wrongCard, nC, listCards, colorOption, numPlayer, text, drinks
     xMouse, yMouse = pygame.mouse.get_pos()
 
     # HIGHER BUTTON
-    if xMouse >= weightWin/5 and xMouse <= 128 + weightWin/5 and yMouse >= 20 and yMouse <= 148:
+    if weightWin / 5 <= xMouse <= 128 + weightWin / 5 and 20 <= yMouse <= 148:
         if int(listCards[nC - 1][1:]) <= int(listCards[nC][1:]):
             wrongCard = False
             colorOption = False
@@ -171,7 +176,7 @@ def choosOption():
             playersList[numPlayer].currentDrinks = 0
 
     # LOWER BUTTON
-    if xMouse >= 2*weightWin/5 and xMouse <= 128 + 2*weightWin/5 and yMouse >= 20 and yMouse <= 148:
+    if 2 * weightWin / 5 <= xMouse <= 128 + 2 * weightWin / 5 and 20 <= yMouse <= 148:
         if int(listCards[nC - 1][1:]) >= int(listCards[nC][1:]):
             wrongCard = False
             colorOption = False
@@ -190,7 +195,7 @@ def choosOption():
             playersList[numPlayer].currentDrinks = 0
 
     # RED BUTTON
-    if xMouse >= 3*weightWin/5 and xMouse <= 128 + 3*weightWin/5 and yMouse >= 20 and yMouse <= 148:
+    if 3 * weightWin / 5 <= xMouse <= 128 + 3 * weightWin / 5 and 20 <= yMouse <= 148:
         if listCards[nC][0] == 'd' or listCards[nC][0] == 'h':
             colorOption = True
             chooseCard()
@@ -208,7 +213,7 @@ def choosOption():
             playersList[numPlayer].currentDrinks = 0
 
     # BLACK BUTTON
-    if xMouse >= 4*weightWin/5 and xMouse <= 128 + 4*weightWin/5 and yMouse >= 20 and yMouse <= 148:
+    if 4 * weightWin / 5 <= xMouse <= 128 + 4 * weightWin / 5 and 20 <= yMouse <= 148:
         if listCards[nC][0] == 's' or listCards[nC][0] == 'c':
             colorOption = True
             chooseCard()
@@ -226,7 +231,7 @@ def choosOption():
             playersList[numPlayer].currentDrinks = 0
 
     # NEXT BUTTON
-    if xMouse >= 20 and xMouse <= 135 and yMouse >= 450 and yMouse <= 565:
+    if 20 <= xMouse <= 135 and 450 <= yMouse <= 565:
         if playersList[numPlayer].currentDrinks >= 2:
             playersList[numPlayer].currentDrinks = 0
             if numPlayer + 1 > len(playersList) - 1:
@@ -234,13 +239,16 @@ def choosOption():
             else:
                 numPlayer += 1
         else:
-            text = 'You can´t pass yet'
+            text = "You can't pass yet"
 
 
 typingData = ['', 0, 30]
+
+
+# noinspection PyShadowingNames
 def typeName():
     global typingNames, typingData, playersList
-    while typingNames == True:
+    while typingNames:
         if len(playersList) < 13:
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
@@ -256,7 +264,6 @@ def typeName():
                         typingData[2] += 30
                         typingNames = False
                 elif event.type == pygame.QUIT:
-                    run = False
                     return
         else:
             typingData[0] = 'You can´t add more players'
@@ -272,6 +279,7 @@ def typeName():
         win.blit(block, rect)
         pygame.display.flip()
 
+
 # todo escribir las instrucciones con imagenes para que sea autoexplicativo
 def showInstructions():
     return
@@ -286,12 +294,12 @@ while run:
     hightWin = info.current_h - 150
     pygame.time.delay(100)
 
-    if not(play):
+    if not play:
         win.blit(bg, (0, 0))
-        win.blit (beer, (int(weightWin/2) - 125, 50))
-        win.blit (startButton, (int(weightWin/2) - 250, int(hightWin/2)))
-        win.blit (nameButton, (int(weightWin/2) - 250, int(hightWin/2) + 231))
-        win.blit (instructionsButton, (int(weightWin/2) + 25, int(hightWin/2) + 231))
+        win.blit(beer, (int(weightWin / 2) - 125, 50))
+        win.blit(startButton, (int(weightWin / 2) - 250, int(hightWin / 2)))
+        win.blit(nameButton, (int(weightWin / 2) - 250, int(hightWin / 2) + 231))
+        win.blit(instructionsButton, (int(weightWin / 2) + 25, int(hightWin / 2) + 231))
         title = pygame.font.SysFont('Arial', 130)
         playOnScreen = title.render('PLAY', True, (0, 0, 0))
         win.blit(playOnScreen, (int(weightWin / 2) - 150, int(hightWin / 2) + 25))
@@ -299,7 +307,7 @@ while run:
         namesOnScreen = title.render('Add Players', True, (255, 255, 255))
         win.blit(namesOnScreen, (int(weightWin / 2) - 225, int(hightWin / 2) + 285))
         instructionsOnScreen = title.render('Instruccions', True, (255, 255, 255))
-        win.blit(instructionsOnScreen, (int(weightWin/2) + 55, int(hightWin/2) + 285))
+        win.blit(instructionsOnScreen, (int(weightWin / 2) + 55, int(hightWin / 2) + 285))
 
         win.blit(cork, (0, 0))
         title = pygame.font.SysFont('Arial', 10)
@@ -314,13 +322,13 @@ while run:
 
         pygame.display.update()
 
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 xMouse, yMouse = pygame.mouse.get_pos()
-                if xMouse >= weightWin/2 - 250 and xMouse <= weightWin/2 + 250 and yMouse >= hightWin/2 and yMouse <= hightWin/2 + 206 and len(playersList) >= 2:
+                if weightWin / 2 - 250 <= xMouse <= weightWin / 2 + 250 and hightWin / 2 <= yMouse <= hightWin / 2 + 206 and len(
+                        playersList) >= 2:
                     win.blit(bg, (0, 0))
                     win.blit(back, (20, hightWin - 50))
                     chosenCard = Card(suitCard, rankCard, xCard, yCard)
@@ -333,15 +341,15 @@ while run:
                     win.blit(blackButton, (int(4 * weightWin / 5), 20))
                     win.blit(nextButton, (20, 450))
                     play = True
-                elif xMouse >= weightWin/2 - 250 and xMouse <= weightWin/2 - 25 and yMouse >= hightWin/2 + 231 and yMouse <= hightWin/2 + 388:
+                elif weightWin / 2 - 250 <= xMouse <= weightWin / 2 - 25 and hightWin / 2 + 231 <= yMouse <= hightWin / 2 + 388:
                     typingNames = True
                     typeName()
-                elif xMouse >= weightWin/2 + 25 and xMouse <= weightWin/2 + 250 and yMouse >= hightWin/2 + 231 and yMouse <= hightWin/2 + 388:
+                elif weightWin / 2 + 25 <= xMouse <= weightWin / 2 + 250 and hightWin / 2 + 231 <= yMouse <= hightWin / 2 + 388:
                     showInstructions()
-                elif xMouse >= 180 and xMouse <= 205:
+                elif 180 <= xMouse <= 205:
                     register = 0
                     for p in range(len(playersList)):
-                        if playersList[p].y <= yMouse and playersList[p].y + 25 >= yMouse:
+                        if playersList[p].y + 25 >= yMouse >= playersList[p].y:
                             register = p
                     playersList.pop(register)
                     for r in range(register, len(playersList)):
@@ -353,16 +361,16 @@ while run:
 
         if numCards == 1:
             pygame.time.delay(750)
-
-            # todo Ajustar texto al centro de la imagen corkMessage
             showTimer = False
             text = 'Press ENTER to start timer'
             win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(hightWin) + 10))
             message = pygame.font.SysFont('Comic Sans MS', 40)
             textOnScreen = message.render(text, True, (0, 0, 0))
             rectText = textOnScreen.get_rect()
-            rectText.center = (int(3 * weightWin / 5) + 250, int(hightWin) + 20)
-            win.blit(textOnScreen, rectText.center)
+            rectText.center = (325 + int(3 * weightWin / 5), int(hightWin) + 50)
+            print(rectText.center)
+            print(type(rectText.center))
+            win.blit(textOnScreen, (rectText.x, rectText.y))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -416,7 +424,7 @@ while run:
         typing = pygame.font.Font(None, 55)
         numCardsOnScreen = typing.render(str(numCards), True, (0, 0, 0))
         rectNumCard = numCardsOnScreen.get_rect()
-        rectNumCard.center = (int(57 - rectNumCard.w/2), int(hightWin + 4 - rectNumCard.h/2))
+        rectNumCard.center = (int(57 - rectNumCard.w / 2), int(hightWin + 4 - rectNumCard.h / 2))
         win.blit(numCardsOnScreen, rectNumCard.center)
 
         win.blit(cork, (0, 0))
@@ -430,19 +438,18 @@ while run:
                 playersOnScreen = message.render(playerInfo, True, (0, 0, 0))
             win.blit(playersOnScreen, (20, playersList[i].y))
 
-        # todo Ajustar texto al centro de la imagen corkMessage
-        win.blit(corkMessage, (105 + int(3*weightWin/5), int(hightWin) + 10))
+        win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(hightWin) + 10))
         message = pygame.font.SysFont('Comic Sans MS', 40)
         textOnScreen = message.render(text, True, (0, 0, 0))
         rectText = textOnScreen.get_rect()
-        rectText.center = (int(3*weightWin/5) + 250, int(hightWin) + 20)
-        win.blit(textOnScreen, rectText.center)
+        rectText.center = (325 + int(3 * weightWin / 5), int(hightWin) + 50)
+        print (rectText.center)
+        print (type(rectText.center))
+        win.blit(textOnScreen, (rectText.x, rectText.y))
 
         pygame.display.update()
 
 pygame.quit()
 
-print ('Este fue el orden del juego: ')
-print (listCards)
-
-
+print('Este fue el orden del juego: ')
+print(listCards)
