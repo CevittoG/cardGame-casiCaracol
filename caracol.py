@@ -10,9 +10,8 @@ info = pygame.display.Info()
 
 # Display
 weightWin = info.current_w
-hightWin = info.current_h - 20
-text = ''
-win = pygame.display.set_mode((weightWin, hightWin), RESIZABLE)  # center: 625, 417
+heightWin = info.current_h - 20
+win = pygame.display.set_mode((weightWin, heightWin), RESIZABLE)  # center: 625, 417
 pygame.display.set_caption("casiCaracol")
 icon = pygame.image.load('images/beer.png')
 pygame.display.set_icon(icon)
@@ -20,11 +19,25 @@ message = pygame.font.Font(None, 20)
 title = pygame.font.SysFont('Arial', 130)
 typing = pygame.font.Font(None, 100)
 
-# Images
+# -------------------- IMAGES --------------------
+# Main Menu
 bg = pygame.image.load('images/background.jpg')
-bg = pygame.transform.scale(bg, (weightWin, hightWin))
+bg = pygame.transform.scale(bg, (weightWin, heightWin))
 bgDark = pygame.image.load('images/background-dark.jpg')
-bgDark = pygame.transform.scale(bgDark, (weightWin, hightWin))
+bgDark = pygame.transform.scale(bgDark, (weightWin, heightWin))
+startButton = pygame.image.load('images/start-button.png')
+startButton = pygame.transform.scale(startButton, (500, 206))
+nameButton = pygame.image.load('images/name-button.png')
+nameButton = pygame.transform.scale(nameButton, (225, 157))
+instructionsButton = pygame.image.load('images/instructions-button.png')
+instructionsButton = pygame.transform.scale(instructionsButton, (225, 157))
+beer = pygame.image.load('images/big-beer.png')
+beer = pygame.transform.scale(beer, (250, 250))
+cork = pygame.image.load('images/cork.png')
+cork = pygame.transform.rotate(cork, 180)
+exName = pygame.image.load('images/delete-name.png')
+exName = pygame.transform.scale(exName, (25, 25))
+# Game
 redButton = pygame.image.load('images/red-button.png')
 redButton = pygame.transform.scale(redButton, (128, 128))
 blackButton = pygame.image.load('images/black-button.png')
@@ -35,23 +48,11 @@ lower = pygame.image.load('images/down-arrow.png')
 lower = pygame.transform.scale(lower, (128, 128))
 back = pygame.image.load('images/cards/back.png')
 rotate_back = pygame.transform.rotate(back, 90)
-startButton = pygame.image.load('images/start-button.png')
-startButton = pygame.transform.scale(startButton, (500, 206))
-exitButton = pygame.image.load('images/exit-button.png')
-exitButton = pygame.transform.scale(exitButton, (200, 108))
-nameButton = pygame.image.load('images/name-button.png')
-nameButton = pygame.transform.scale(nameButton, (225, 157))
-instructionsButton = pygame.image.load('images/instructions-button.png')
-instructionsButton = pygame.transform.scale(instructionsButton, (225, 157))
-beer = pygame.image.load('images/big-beer.png')
-beer = pygame.transform.scale(beer, (250, 250))
-cork = pygame.image.load('images/cork.png')
-cork = pygame.transform.rotate(cork, 180)
 corkMessage = pygame.transform.rotate(cork, -90)
-exName = pygame.image.load('images/delete-name.png')
-exName = pygame.transform.scale(exName, (25, 25))
 nextButton = pygame.image.load('images/next-button.png')
 nextButton = pygame.transform.scale(nextButton, (115, 115))
+exitButton = pygame.image.load('images/exit-button.png')
+exitButton = pygame.transform.scale(exitButton, (150, 81))
 
 # -------------------- VARIABLES --------------------
 # Cards
@@ -70,9 +71,9 @@ nC = 0
 suitCard = listCards[nC][0]
 rankCard = listCards[nC][1:]
 xCard = int(weightWin / 6)
-yCard = int(hightWin / 5)
+yCard = int(heightWin / 5)
 weightCard = 75
-hightCard = 108
+heightCard = 108
 # Player
 playersList = []
 numPlayer = 0
@@ -85,8 +86,9 @@ typingNames = False
 typingData = ['', 0, 30]
 wrongCard = False
 colorOption = False
+text = ''
 
-
+# -------------------- CLASSES --------------------
 class Card(object):
     def __init__(self, suit, rank, x, y):
         self.suit = suit
@@ -106,15 +108,16 @@ class Player(object):
         self.currentDrinks = 0
 
 
+# -------------------- FUNCTIONS --------------------
 def chooseCard():
     global wrongCard, colorOption, xCard, yCard, suitCard, rankCard, nC, numCards
 
     suitCard = listCards[nC][0]
     rankCard = listCards[nC][1:]
 
-    if (xCard + weightCard / 2) >= (5 * weightWin / 6):
+    if (xCard + weightCard / 2) >= (1.5 * weightCard) + (5 * weightWin / 6):
         xCard = int(weightWin / 6)
-        yCard += int(hightCard + 10)
+        yCard += int(heightCard + 10)
     else:
         xCard += int(weightCard / 2)
 
@@ -146,7 +149,7 @@ def backCard():
     wrongCard = False
 
 
-def choosOption():
+def chooseOption():
     global suitCard, rankCard, wrongCard, nC, listCards, colorOption, numPlayer, text, drinks
     xMouse, yMouse = pygame.mouse.get_pos()
 
@@ -235,9 +238,10 @@ def choosOption():
         else:
             text = "You can't pass yet"
 
-    # todo MAIN MENU
-    #if penepene:
-    #    restart()
+    # MAIN MENU
+    if int(weightWin / 5) + 128 <= xMouse <= int(weightWin / 5) + 278 and int(heightWin) + 10 <= yMouse <= int(heightWin) + 91:
+        restart()
+
 
 def typeName():
     global typingNames, typingData, playersList
@@ -279,9 +283,17 @@ def showInstructions():
 
 
 def restart():
-    global listCards, numCards, nC, suitCard, rankCard, xCard, yCard, weightCard, hightCard
+    global listCards, numCards, nC, suitCard, rankCard, xCard, yCard, weightCard, heightCard
     global playersList, numPlayer, drinks, currentDrinks
     global run, play, typingNames, typingData, wrongCard, colorOption
+    # Game
+    run = True
+    play = False
+    typingNames = False
+    typingData = ['', 0, 30]
+    wrongCard = False
+    colorOption = False
+    win.blit(bg, (0, 0))
     # Cards
     listCards = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13',
                  'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'd12', 'd13',
@@ -298,43 +310,36 @@ def restart():
     suitCard = listCards[nC][0]
     rankCard = listCards[nC][1:]
     xCard = int(weightWin / 6)
-    yCard = int(hightWin / 5)
+    yCard = int(heightWin / 5)
     weightCard = 75
-    hightCard = 108
+    heightCard = 108
     # Player
     playersList = []
     numPlayer = 0
     drinks = 0
     currentDrinks = 0
-    # Game
-    run = True
-    play = False
-    typingNames = False
-    typingData = ['', 0, 30]
-    wrongCard = False
-    colorOption = False
-    win.blit(bg, (0, 0))
 
 
+# -------------------- GAME --------------------
 while run:
     weightWin = info.current_w
-    hightWin = info.current_h - 150
+    heightWin = info.current_h - 150
     pygame.time.delay(100)
 
     if not play:
         win.blit(bg, (0, 0))
         win.blit(beer, (int(weightWin / 2) - 125, 50))
-        win.blit(startButton, (int(weightWin / 2) - 250, int(hightWin / 2)))
-        win.blit(nameButton, (int(weightWin / 2) - 250, int(hightWin / 2) + 231))
-        win.blit(instructionsButton, (int(weightWin / 2) + 25, int(hightWin / 2) + 231))
+        win.blit(startButton, (int(weightWin / 2) - 250, int(heightWin / 2)))
+        win.blit(nameButton, (int(weightWin / 2) - 250, int(heightWin / 2) + 231))
+        win.blit(instructionsButton, (int(weightWin / 2) + 25, int(heightWin / 2) + 231))
         title = pygame.font.SysFont('Arial', 130)
         playOnScreen = title.render('PLAY', True, (0, 0, 0))
-        win.blit(playOnScreen, (int(weightWin / 2) - 150, int(hightWin / 2) + 25))
+        win.blit(playOnScreen, (int(weightWin / 2) - 150, int(heightWin / 2) + 25))
         title = pygame.font.SysFont('Arial', 30)
         namesOnScreen = title.render('Add Players', True, (255, 255, 255))
-        win.blit(namesOnScreen, (int(weightWin / 2) - 225, int(hightWin / 2) + 285))
-        instructionsOnScreen = title.render('Instruccions', True, (255, 255, 255))
-        win.blit(instructionsOnScreen, (int(weightWin / 2) + 55, int(hightWin / 2) + 285))
+        win.blit(namesOnScreen, (int(weightWin / 2) - 225, int(heightWin / 2) + 285))
+        instructionsOnScreen = title.render('Instructions', True, (255, 255, 255))
+        win.blit(instructionsOnScreen, (int(weightWin / 2) + 55, int(heightWin / 2) + 285))
 
         win.blit(cork, (0, 0))
         title = pygame.font.SysFont('Arial', 10)
@@ -354,10 +359,9 @@ while run:
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 xMouse, yMouse = pygame.mouse.get_pos()
-                if weightWin / 2 - 250 <= xMouse <= weightWin / 2 + 250 and hightWin / 2 <= yMouse <= hightWin / 2 + 206 and len(
-                        playersList) >= 2:
+                if weightWin / 2 - 250 <= xMouse <= weightWin / 2 + 250 and heightWin / 2 <= yMouse <= heightWin / 2 + 206 and len(playersList) >= 2:
                     win.blit(bg, (0, 0))
-                    win.blit(back, (20, hightWin - 50))
+                    win.blit(back, (20, heightWin - 50))
                     chosenCard = Card(suitCard, rankCard, xCard, yCard)
                     win.blit(chosenCard.image, (chosenCard.x, chosenCard.y))
                     nC += 1
@@ -367,11 +371,17 @@ while run:
                     win.blit(redButton, (int(3 * weightWin / 5), 20))
                     win.blit(blackButton, (int(4 * weightWin / 5), 20))
                     win.blit(nextButton, (20, 450))
+                    win.blit(exitButton, (int(weightWin / 5) + 128, int(heightWin) + 10))
+                    title = pygame.font.SysFont('Arial', 40)
+                    block = title.render('EXIT', True, (255, 255, 255))
+                    rect = block.get_rect()
+                    rect.center = (int(weightWin / 5) + 203, int(heightWin) + 50)
+                    win.blit(block, rect)
                     play = True
-                elif weightWin / 2 - 250 <= xMouse <= weightWin / 2 - 25 and hightWin / 2 + 231 <= yMouse <= hightWin / 2 + 388:
+                elif weightWin / 2 - 250 <= xMouse <= weightWin / 2 - 25 and heightWin / 2 + 231 <= yMouse <= heightWin / 2 + 388:
                     typingNames = True
                     typeName()
-                elif weightWin / 2 + 25 <= xMouse <= weightWin / 2 + 250 and hightWin / 2 + 231 <= yMouse <= hightWin / 2 + 388:
+                elif weightWin / 2 + 25 <= xMouse <= weightWin / 2 + 250 and heightWin / 2 + 231 <= yMouse <= heightWin / 2 + 388:
                     showInstructions()
                 elif 180 <= xMouse <= 205:
                     register = 0
@@ -389,12 +399,12 @@ while run:
         if numCards == 1:
             pygame.time.delay(750)
             showTimer = False
-            win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(hightWin) + 10))
+            win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(heightWin) + 10))
             text = 'Press ENTER to start timer'
             message = pygame.font.Font(None, 40)
             textOnScreen = message.render(text, True, (0, 0, 0))
             rectText = textOnScreen.get_rect()
-            rectText.center = (325 + int(3 * weightWin / 5), int(hightWin) + 55)
+            rectText.center = (325 + int(3 * weightWin / 5), int(heightWin) + 55)
             win.blit(textOnScreen, (rectText.x, rectText.y))
 
             for event in pygame.event.get():
@@ -414,12 +424,15 @@ while run:
                         run = False
                     elif event.type == MOUSEBUTTONDOWN and minutes >= 0:
                         minutes = -1
-                    elif event.type == KEYDOWN:
-                        if event.key == K_RETURN and minutes >= 0:
-                            minutes = -1
                     elif event.type == MOUSEBUTTONDOWN and minutes < 0:
                         showTimer = False
                         restart()
+                    elif event.type == KEYDOWN:
+                        if event.key == K_RETURN and minutes >= 0:
+                            minutes = -1
+                        elif event.key == K_RETURN and minutes < 0:
+                            showTimer = False
+                            restart()
                 if seconds < 1:
                     seconds = 59
                     minutes -= 1
@@ -428,7 +441,6 @@ while run:
                     timer = '0' + str(minutes) + ':0' + str(seconds)
                 else:
                     timer = '0' + str(minutes) + ':' + str(seconds)
-
 
                 if minutes < 0:
                     timer = "Time's out!"
@@ -439,16 +451,16 @@ while run:
                     rect.center = win.get_rect().center
                     rect.y = int(win.get_rect().h / 2) - 100
                     lastCard = pygame.image.load('images/cards/' + listCards[len(listCards) - 1] + '.png')
-                    lastCard = pygame.transform.scale(lastCard, (int(weightCard * 1.5), int(hightCard * 1.5)))
+                    lastCard = pygame.transform.scale(lastCard, (int(weightCard * 1.5), int(heightCard * 1.5)))
                     win.blit(lastCard, (int(win.get_rect().w / 2) - weightCard, int(win.get_rect().h / 2) + 50))
                     win.blit(block, rect)
                     pygame.display.flip()
                 else:
-                    win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(hightWin) + 10))
+                    win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(heightWin) + 10))
                     message = pygame.font.Font(None, 70)
                     textOnScreen = message.render(timer, True, (0, 0, 0))
                     rectText = textOnScreen.get_rect()
-                    rectText.center = (325 + int(3 * weightWin / 5), int(hightWin) + 55)
+                    rectText.center = (325 + int(3 * weightWin / 5), int(heightWin) + 55)
                     win.blit(textOnScreen, (rectText.x, rectText.y))
                     pygame.display.flip()
                     pygame.time.delay(999)
@@ -458,13 +470,13 @@ while run:
                 if event.type == pygame.QUIT:
                     run = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    choosOption()
+                    chooseOption()
 
-            win.blit(back, (20, hightWin - 50))
+            win.blit(back, (20, heightWin - 50))
             typing = pygame.font.Font(None, 55)
             numCardsOnScreen = typing.render(str(numCards), True, (0, 0, 0))
             rectNumCard = numCardsOnScreen.get_rect()
-            rectNumCard.center = (int(57 - rectNumCard.w / 2), int(hightWin + 4 - rectNumCard.h / 2))
+            rectNumCard.center = (int(57 - rectNumCard.w / 2), int(heightWin + 4 - rectNumCard.h / 2))
             win.blit(numCardsOnScreen, rectNumCard.center)
 
             win.blit(cork, (0, 0))
@@ -478,11 +490,11 @@ while run:
                     playersOnScreen = message.render(playerInfo, True, (255, 255, 255))
                 win.blit(playersOnScreen, (20, playersList[i].y))
 
-            win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(hightWin) + 10))
+            win.blit(corkMessage, (105 + int(3 * weightWin / 5), int(heightWin) + 10))
             message = pygame.font.Font(None, 60)
             textOnScreen = message.render(text, True, (0, 0, 0))
             rectText = textOnScreen.get_rect()
-            rectText.center = (325 + int(3 * weightWin / 5), int(hightWin) + 55)
+            rectText.center = (325 + int(3 * weightWin / 5), int(heightWin) + 55)
             win.blit(textOnScreen, (rectText.x, rectText.y))
 
         pygame.display.update()
